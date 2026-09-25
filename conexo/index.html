@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conselho de administração de bolso</title>
+<meta name="description" content="Os 4 prompts do hands-on da palestra Decisões Estratégicas com IA — Co.Nexo Senac, Vitória da Conquista.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Rubik:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14213D;
+    --paper: #FBFBF8;
+    --paper-2: #FFFFFF;
+    --line: #E3E6E4;
+    --muted: #5A6472;
+    --accent: #C2551F;
+    --accent-strong: #D9622B;
+    --teal: #1F5F6B;
+    --ok: #1C6B4A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F2F4F7;
+      --paper: #12151C;
+      --paper-2: #1A1F29;
+      --line: #2C3340;
+      --muted: #A3AEBF;
+      --accent: #F0915A;
+      --accent-strong: #F0915A;
+      --teal: #7FC3CE;
+      --ok: #5FD19B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F2F4F7;
+    --paper: #12151C;
+    --paper-2: #1A1F29;
+    --line: #2C3340;
+    --muted: #A3AEBF;
+    --accent: #F0915A;
+    --accent-strong: #F0915A;
+    --teal: #7FC3CE;
+    --ok: #5FD19B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.5;
+    padding: 0 16px 64px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header { padding: 32px 0 8px; }
+  .eyebrow {
+    font-size: 13px; font-weight: 600; letter-spacing: 1.6px;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+  }
+  h1 {
+    font-family: 'Rubik', system-ui, sans-serif;
+    font-size: 30px; line-height: 1.2; font-weight: 700; margin: 0 0 10px;
+  }
+  .sub { color: var(--muted); margin: 0; font-size: 16px; }
+
+  .setup {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 18px; margin: 24px 0 8px;
+  }
+  .setup label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px; }
+  .setup input {
+    width: 100%; font: inherit; font-size: 17px; padding: 13px 14px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--paper); color: var(--ink);
+  }
+  .setup input:focus { outline: 2px solid var(--accent-strong); outline-offset: 1px; }
+  .hint { color: var(--muted); font-size: 14px; margin: 9px 0 0; }
+
+  .where {
+    margin: 22px 0 8px; padding: 16px 18px; border-radius: 14px;
+    background: var(--paper-2); border: 1px solid var(--line);
+  }
+  .where h2 { font-family: 'Rubik', sans-serif; font-size: 17px; margin: 0 0 8px; }
+  .where p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  .card {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 18px; margin: 14px 0;
+  }
+  .card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .num {
+    font-family: 'Rubik', sans-serif; font-size: 26px; font-weight: 700;
+    color: var(--accent); line-height: 1;
+  }
+  .card h3 { font-family: 'Rubik', sans-serif; font-size: 18px; margin: 0; font-weight: 600; }
+  .why { color: var(--muted); font-size: 14px; margin: 2px 0 12px; }
+  .prompt {
+    font-size: 17px; line-height: 1.55; margin: 0 0 14px;
+    padding: 14px; border-radius: 10px; background: var(--paper);
+    border: 1px solid var(--line); white-space: pre-wrap; word-break: break-word;
+  }
+  .prompt b { color: var(--accent); font-weight: 600; }
+  button.copy {
+    width: 100%; font: inherit; font-weight: 600; font-size: 16px;
+    padding: 14px; border-radius: 10px; border: 0; cursor: pointer;
+    background: var(--ink); color: var(--paper);
+    -webkit-tap-highlight-color: transparent;
+  }
+  button.copy:active { opacity: .82; }
+  button.copy.done { background: var(--ok); color: #FFFFFF; }
+
+  .star { border-color: var(--accent-strong); border-width: 2px; }
+  .star .num { color: var(--accent-strong); }
+  .tag {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .6px;
+    text-transform: uppercase; color: var(--paper); background: var(--accent-strong);
+    padding: 4px 9px; border-radius: 999px; margin-bottom: 10px;
+  }
+
+  .rules { margin: 30px 0 0; padding: 20px; border-radius: 14px; background: var(--paper-2); border: 1px solid var(--line); }
+  .rules h2 { font-family: 'Rubik', sans-serif; font-size: 18px; margin: 0 0 12px; }
+  .rules ul { margin: 0; padding-left: 20px; }
+  .rules li { margin-bottom: 9px; }
+  .rules li:last-child { margin-bottom: 0; }
+
+  footer { margin-top: 34px; color: var(--muted); font-size: 14px; text-align: center; }
+  footer p { margin: 5px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Co.Nexo Senac &middot; Vitória da Conquista</p>
+  <h1>Conselho de administração de bolso</h1>
+  <p class="sub">Quatro perguntas, na ordem, sobre o seu negócio de verdade. Leva uns 8 minutos.</p>
+</header>
+
+<div class="setup">
+  <label for="seg">Qual é o seu segmento?</label>
+  <input id="seg" type="text" placeholder="ex.: açaí, salão de beleza, contabilidade" autocomplete="off" autocapitalize="none" enterkeyhint="done">
+  <p class="hint">Escreva uma vez e os quatro prompts abaixo já saem preenchidos.</p>
+</div>
+
+<div class="where">
+  <h2>Onde colar</h2>
+  <p>Use a <b>Meta AI no WhatsApp</b> — não precisa instalar nada. Se você já usa ChatGPT ou Gemini, pode seguir por lá. Cole as perguntas <b>na mesma conversa</b>, uma depois da outra: cada uma usa a resposta da anterior.</p>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="num">1</span><h3>O retrato</h3></div>
+  <p class="why">Para a IA entender o seu negócio antes de opinar.</p>
+  <p class="prompt" id="p1"></p>
+  <button class="copy" data-target="p1">Copiar pergunta 1</button>
+</div>
+
+<div class="card star">
+  <span class="tag">O que quase ninguém faz</span>
+  <div class="card-head"><span class="num">2</span><h3>O sócio pessimista</h3></div>
+  <p class="why">A IA tende a concordar com você. Esta pergunta obriga ela a discordar.</p>
+  <p class="prompt" id="p2"></p>
+  <button class="copy" data-target="p2">Copiar pergunta 2</button>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="num">3</span><h3>Os cenários</h3></div>
+  <p class="why">Decidir é escolher entre futuros. Aqui eles ficam escritos.</p>
+  <p class="prompt" id="p3"></p>
+  <button class="copy" data-target="p3">Copiar pergunta 3</button>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="num">4</span><h3>O plano</h3></div>
+  <p class="why">Sem prazo e sem medida, não é plano — é intenção.</p>
+  <p class="prompt" id="p4"></p>
+  <button class="copy" data-target="p4">Copiar pergunta 4</button>
+</div>
+
+<div class="rules">
+  <h2>Antes de sair usando</h2>
+  <ul>
+    <li><b>Não cole dado de cliente.</b> Nome, CPF, telefone, contrato, prontuário. Se você não mandaria num grupo de WhatsApp do bairro, não cole aqui.</li>
+    <li><b>Confira número e data.</b> A IA erra com convicção. Peça a fonte e abra o link antes de usar em proposta.</li>
+    <li><b>Ela propõe, você decide.</b> A assinatura na decisão continua sendo sua.</li>
+  </ul>
+</div>
+
+<footer>
+  <p>Decisões Estratégicas com Inteligência Artificial</p>
+  <p>Tibério Morais e Prof. Danilo Santos &middot; 26/09/2026</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var FALLBACK = '[seu segmento]';
+  var templates = {
+    p1: 'Tenho um negócio de {S} em Vitória da Conquista, na Bahia. Faça uma análise SWOT do meu negócio em tópicos curtos e diretos.',
+    p2: 'Agora seja meu sócio pessimista: quais são os 3 maiores riscos que eu não estou vendo no meu negócio de {S}? Seja direto, não seja gentil comigo.',
+    p3: 'Monte 3 cenários para os próximos 6 meses do meu negócio de {S}: otimista, realista e pessimista. Dê uma ação concreta para cada um.',
+    p4: 'Transforme tudo isso em um plano de 30 dias para o meu negócio de {S}, com 5 ações e como eu meço o resultado de cada uma.'
+  };
+
+  var input = document.getElementById('seg');
+  var ids = ['p1', 'p2', 'p3', 'p4'];
+
+  function segment() {
+    var v = (input.value || '').trim();
+    return v === '' ? FALLBACK : v;
+  }
+
+  function textFor(id) {
+    return templates[id].replace('{S}', segment());
+  }
+
+  function render() {
+    var s = segment();
+    var isPlaceholder = s === FALLBACK;
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      var parts = templates[id].split('{S}');
+      el.textContent = '';
+      el.appendChild(document.createTextNode(parts[0]));
+      var mark = document.createElement(isPlaceholder ? 'b' : 'span');
+      mark.textContent = s;
+      el.appendChild(mark);
+      el.appendChild(document.createTextNode(parts[1]));
+    });
+  }
+
+  try {
+    var saved = localStorage.getItem('segmento');
+    if (saved) { input.value = saved; }
+  } catch (e) {}
+
+  input.addEventListener('input', function () {
+    render();
+    try { localStorage.setItem('segmento', input.value); } catch (e) {}
+  });
+
+  document.querySelectorAll('button.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-target');
+      var text = textFor(id);
+      var original = btn.textContent;
+
+      function done() {
+        btn.textContent = 'Copiado — agora cole na IA';
+        btn.classList.add('done');
+        setTimeout(function () {
+          btn.textContent = original;
+          btn.classList.remove('done');
+        }, 2200);
+      }
+
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '0';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        try { document.execCommand('copy'); done(); } catch (e) {
+          btn.textContent = 'Selecione o texto acima e copie';
+          setTimeout(function () { btn.textContent = original; }, 2600);
+        }
+        document.body.removeChild(ta);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
