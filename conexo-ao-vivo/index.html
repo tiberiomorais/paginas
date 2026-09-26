@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ao vivo · Da pergunta à ação · Co.Nexo Senac</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070707; --bg2:#141414; --txt:#fff; --mut:#8a8a8a;
+  --coral:#FF6B6B; --ciano:#4ECDC4; --ouro:#FFD700; --laranja:#FFA500;
+  --d-laranja:#FF5A36; --d-amarelo:#FFC04D; --d-verde:#22B38A; --d-roxo:#7B3FE4; --d-azul:#3478F6;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --sans:Barlow,"Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--sans);overflow:hidden}
+.deck{position:relative;width:100vw;height:100vh}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:6vh 7vw;opacity:0;visibility:hidden;transform:translateY(2vh);
+  transition:opacity .6s var(--ease),transform .6s var(--ease),visibility .6s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.slide.center{align-items:center;text-align:center}
+.slide.img{padding:0;background:#000;align-items:center}
+.slide.img img{width:100%;height:100%;object-fit:contain}
+.slide.photo{padding:0}
+.slide.photo .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide.photo .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.75) 42%,rgba(0,0,0,.15) 75%,rgba(0,0,0,0) 100%)}
+.slide.photo .shade.bottom{background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 38%,rgba(0,0,0,0) 70%)}
+.slide.photo .inner{position:relative;padding:6vh 7vw;max-width:62vw;height:100%;display:flex;flex-direction:column;justify-content:center}
+.slide.photo .inner.low{justify-content:flex-end;max-width:90vw;padding-bottom:10vh}
+.credit{position:absolute;right:1.4vw;bottom:1.2vh;font-size:clamp(10px,.9vw,14px);color:rgba(255,255,255,.65);text-shadow:0 1px 2px #000}
+.kicker{font-family:var(--cond);font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  font-size:clamp(14px,1.6vw,24px);color:var(--mut);margin-bottom:2.2vh}
+h1,h2{font-family:var(--cond);font-weight:900;text-transform:uppercase;line-height:.92;letter-spacing:.005em}
+h1{font-size:clamp(48px,9vw,150px)}
+h2{font-size:clamp(40px,6.4vw,108px)}
+h3{font-family:var(--cond);font-weight:700;font-size:clamp(24px,3vw,50px);line-height:1.05}
+p.lead{font-size:clamp(20px,2.3vw,38px);font-weight:300;line-height:1.3;color:#d9d9d9;margin-top:3vh;max-width:70ch}
+.slide.center p.lead{margin-left:auto;margin-right:auto}
+.mut{color:var(--mut)} .coral{color:var(--coral)} .ciano{color:var(--ciano)} .ouro{color:var(--ouro)} .lar{color:var(--laranja)}
+.big{font-family:var(--cond);font-weight:900;font-size:clamp(120px,24vw,400px);line-height:.85}
+.src{position:absolute;left:7vw;bottom:4vh;font-size:clamp(11px,1vw,16px);color:#6d6d6d;letter-spacing:.02em}
+.quote{font-family:var(--cond);font-weight:800;font-size:clamp(34px,5vw,84px);line-height:1;text-transform:none}
+.who{margin-top:3vh;font-size:clamp(16px,1.6vw,26px);color:var(--mut)}
+.who b{color:var(--txt);font-weight:600}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:start}
+.card{background:var(--bg2);border-radius:18px;padding:4vh 2.6vw}
+.card .quote{font-size:clamp(26px,3.3vw,56px)}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:2vw;margin-top:4vh}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6vw;margin-top:4vh}
+.row3 .card h3,.row4 .card h3{margin-bottom:1.2vh}
+.row3 .card p,.row4 .card p{font-size:clamp(15px,1.45vw,23px);color:#cfcfcf;line-height:1.35}
+.num{font-family:var(--cond);font-weight:900;font-size:clamp(54px,7vw,120px);line-height:.9}
+.face{display:flex;gap:1.4vw;align-items:center;margin-bottom:2vh}
+.face img{width:clamp(70px,8vw,140px);height:clamp(70px,8vw,140px);border-radius:50%;object-fit:cover;object-position:50% 25%;border:3px solid #222}
+.face .cap{font-size:clamp(12px,1.1vw,18px);color:var(--mut);line-height:1.3}
+.face .cap b{display:block;color:var(--txt);font-size:clamp(16px,1.6vw,26px);font-family:var(--cond);letter-spacing:.04em}
+.tinycredit{font-size:clamp(9px,.8vw,13px);color:#5e5e5e;margin-top:.4vh}
+.map{display:flex;gap:1.2vw;align-items:stretch;margin-top:5vh;width:100%}
+.map .st{flex:1;border-radius:18px;padding:3.2vh 1.6vw;background:#1b1b1b;color:#666;transition:all .5s var(--ease)}
+.map .st small{display:block;font-family:var(--cond);font-weight:700;letter-spacing:.14em;font-size:clamp(12px,1.2vw,18px)}
+.map .st b{display:block;font-family:var(--cond);font-weight:900;font-size:clamp(26px,3.3vw,56px);text-transform:uppercase;margin:.6vh 0}
+.map .st span{font-size:clamp(14px,1.3vw,21px)}
+.map .arrow{align-self:center;color:#444;font-size:clamp(20px,2vw,36px)}
+.map .st.s1.lit{background:var(--d-laranja);color:#fff}
+.map .st.s2.lit{background:var(--d-amarelo);color:#1a1a1a}
+.map .st.s3.lit{background:var(--d-verde);color:#fff}
+.map .st.s4.lit{background:var(--d-azul);color:#fff}
+.stairs{display:flex;align-items:flex-end;gap:1.6vw;margin-top:3vh;height:62vh}
+.stairs .lv{flex:1;border-radius:18px 18px 0 0;padding:2.4vh 1.6vw;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden}
+.stairs .lv small{font-family:var(--cond);font-weight:700;letter-spacing:.16em;font-size:clamp(12px,1.3vw,22px);opacity:.8}
+.stairs .lv b{font-family:var(--cond);font-weight:900;font-size:clamp(26px,min(3.6vw,6vh),66px);text-transform:uppercase;line-height:.95;margin:.6vh 0 1vh}
+.stairs .lv span{font-size:clamp(13px,min(1.3vw,2.4vh),22px);line-height:1.3}
+.lv1{height:52%;background:#262626}
+.lv2{height:76%;background:#1f3b39}
+.lv3{height:100%;background:var(--ciano);color:#062220}
+table.cmp{width:100%;border-collapse:separate;border-spacing:0 1.2vh;margin-top:3vh;font-size:clamp(14px,1.45vw,23px)}
+table.cmp th{font-family:var(--cond);font-weight:800;text-transform:uppercase;font-size:clamp(20px,2.3vw,38px);text-align:left;padding:0 1vw 1vh}
+table.cmp td{background:var(--bg2);padding:1.8vh 1vw;vertical-align:top;color:#d6d6d6;line-height:1.3}
+table.cmp td:first-child{color:var(--mut);font-family:var(--cond);font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:transparent;width:13%}
+.qr{background:#fff;border-radius:18px;padding:2vh;width:min(38vh,32vw)}
+.qr img{width:100%;display:block}
+.qrrow{display:flex;gap:5vw;align-items:center}
+.qr3{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw;margin-top:4vh}
+.qr3 .q{text-align:center}
+.qr3 .q .qr{margin:0 auto;width:min(34vh,24vw)}
+.qr3 .q b{display:block;font-family:var(--cond);font-weight:800;text-transform:uppercase;font-size:clamp(18px,2vw,34px);margin-top:1.4vh}
+.tag{display:inline-block;border:1px solid currentColor;border-radius:99px;padding:.5vh 1.2vw;font-size:clamp(12px,1.2vw,18px);letter-spacing:.14em;text-transform:uppercase;font-family:var(--cond);font-weight:700}
+.pill{display:inline-block;border-radius:12px;padding:1vh 1.4vw;font-family:var(--cond);font-weight:800;text-transform:uppercase;font-size:clamp(20px,2.4vw,40px);margin:.6vh .4vw}
+.credits{columns:2;column-gap:4vw;font-size:clamp(12px,1.05vw,17px);color:#aaa;line-height:1.5;margin-top:3vh}
+.credits p{break-inside:avoid;margin-bottom:1vh}
+#hud{position:fixed;right:1.6vw;bottom:1.4vh;font-size:14px;color:#555;font-family:var(--sans);z-index:10}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:rgba(18,18,18,.97);
+  border-top:2px solid var(--ciano);color:#ececec;padding:2vh 3vw;font-size:clamp(15px,1.35vw,21px);line-height:1.5;
+  display:none;z-index:20;white-space:pre-line}
+#notes.show{display:block}
+#help{position:fixed;left:1.6vw;bottom:1.4vh;font-size:14px;color:#444;z-index:10}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<section class="slide center">
+  <div class="kicker">Parte 2 · Co.Nexo Senac · 26/09/2026</div>
+  <h1>Da pergunta<br><span class="ciano">à ação.</span></h1>
+  <p class="lead">Tibério Morais</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Antes de começar · aponte a câmera</div>
+  <div class="qr3" style="grid-template-columns:1fr 1fr;gap:6vw;margin-top:1vh">
+    <div class="q"><div class="qr" style="width:min(44vh,30vw)"><img src="img/qr-abertura-conexo.png" alt="QR code do formulário"></div>
+      <b class="ouro">Responda: como você usa a IA?</b><p class="lead" style="margin-top:.6vh;font-size:clamp(14px,1.4vw,22px)">forms.gle/NB6s71dYs8AS73EbA</p></div>
+    <div class="q"><div class="qr" style="width:min(44vh,30vw)"><img src="img/qr-ao-vivo.png" alt="QR code da apresentação ao vivo"></div>
+      <b class="ciano">Acompanhe os slides ao vivo</b><p class="lead" style="margin-top:.6vh;font-size:clamp(14px,1.4vw,22px)">tiberiomorais.github.io/paginas/conexo-ao-vivo</p></div>
+  </div>
+</section>
+
+
+<section class="slide img">
+  <img src="img/unex-quem-usa-quem-confia.jpg" alt="Quem usa? versus Quem confia cegamente?">
+</section>
+
+<section class="slide img">
+  <img src="img/unex-84-29.jpg" alt="84% usam, 29% confiam">
+</section>
+
+<section class="slide">
+  <div class="kicker">O que sempre nos ensinaram</div>
+  <h2>O computador faz<br>o que você manda.</h2>
+  <p class="lead"><span class="coral" style="font-family:var(--cond);font-weight:900;font-size:1.6em;text-transform:uppercase">Essa era acabou.</span></p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Pela primeira vez</div>
+  <h2>A IA <span class="ciano">raciocina.</span><br><span class="ouro">Aprende.</span> <span class="coral">Decide.</span></h2>
+  <p class="lead">E já trabalha sozinha, como um funcionário.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">23/09 · anteontem · Conselho de Segurança da ONU</div>
+  <div style="display:flex;gap:3vw;margin-bottom:1vh">
+    <div class="face"><img src="img/pessoas/altman.jpg" alt="Sam Altman" style="object-position:88% 18%"><div class="cap"><b>Sam Altman</b>OpenAI<div class="tinycredit">Foto: Steve Jurvetson, CC BY 2.0</div></div></div>
+    <div class="face"><img src="img/pessoas/amodei.jpg" alt="Dario Amodei"><div class="cap"><b>Dario Amodei</b>Anthropic<div class="tinycredit">Foto: TechCrunch, CC BY 2.0</div></div></div>
+  </div>
+  <h2>Os donos da IA foram<br>à ONU <span class="coral">pedir regras.</span></h2>
+  <p class="lead">Altman: podemos <b>“perder o controle do futuro para a IA”</b>. Amodei: ela pode ser <b>“um risco para a humanidade como um todo”</b>.</p>
+  <div class="src">Fontes: CNN, CNBC, Fortune · 23/09/2026</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">E nem eles concordam</div>
+  <div class="split" style="margin-top:1vh">
+    <div class="card"><div class="face"><img src="img/pessoas/amodei.jpg" alt="Dario Amodei"><div class="cap"><b>Dario Amodei</b>12/09 · Anthropic<div class="tinycredit">Foto: TechCrunch, CC BY 2.0</div></div></div>
+      <div class="quote">“Precisamos <span class="ciano">desacelerar</span> o avanço dos modelos.”</div></div>
+    <div class="card"><div class="face"><img src="img/pessoas/huang.jpg" alt="Jensen Huang"><div class="cap"><b>Jensen Huang</b>15/09 · Nvidia<div class="tinycredit">Foto: Peter Dasilva, CC BY 4.0</div></div></div>
+      <div class="quote">“Não precisamos de <span class="coral">novas leis</span>.”</div></div>
+  </div>
+  <div class="src">Fontes: Axios, Forbes (12/09) · TechCrunch (15/09)</div>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-ninguem-pisa-no-freio.jpg" alt="Ninguém vai pisar no freio: EUA x China">
+</section>
+
+<section class="slide photo">
+  <div class="shade bottom"></div>
+  <div class="inner low">
+    <div class="kicker" style="color:#ddd">24/09 · ontem · Casa Branca</div>
+    <h2>Trump e Xi: as primeiras conversas<br>oficiais <span class="ouro">EUA–China</span> sobre IA.</h2>
+  </div>
+</section>
+
+<section class="slide photo">
+  <div class="shade bottom"></div>
+  <div class="inner low">
+    <div class="kicker" style="color:#ddd">À mesa, com os dois presidentes</div>
+    <p class="lead" style="margin-top:0;font-size:clamp(18px,2vw,32px)">Jensen Huang · Elon Musk · Sam Altman · Tim Cook · Satya Nadella · Lisa Su · Sergey Brin</p>
+    <h2 style="margin-top:2vh" class="coral">Nenhum brasileiro à mesa.</h2>
+  </div>
+</section>
+
+<section class="slide center">
+  <h2>A briga é lá fora.<br>O resultado chega<br>no <span class="ciano">seu celular.</span></h2>
+  <p class="lead">A pergunta não é <b>SE</b> vocês vão usar. É <b class="ouro">COMO</b>.</p>
+</section>
+
+<section class="slide">
+  <div class="face"><img src="img/pessoas/kurian.jpg" alt="Thomas Kurian"><div class="cap"><b>Thomas Kurian</b>CEO do Google Cloud<div class="tinycredit">Foto: Eric Dietrich, domínio público</div></div></div>
+  <div class="kicker">🇧🇷 E no Brasil? Também foi ontem</div>
+  <h2>Google Cloud Summit<br><span class="lar">São Paulo · 24/09</span></h2>
+  <p class="lead">“Ano passado foi a era da experimentação.<br>Este ano é a era do <b>resultado</b>.”</p>
+  <div class="src">Keynote de negócios do Google Cloud Summit Brasil 2026 (vídeo: Google Cloud LATAM)</div>
+</section>
+
+<section class="slide center">
+  <div class="big ciano">9×</div>
+  <p class="lead">As <b>pequenas e médias empresas brasileiras</b> multiplicaram por 9<br>o uso de ferramentas de IA do Google em um ano.</p>
+  <div class="src">Fonte: Google Brasil, “Da experimentação ao impacto real”, 24/09/2026</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Três cases brasileiros · setores que vocês conhecem</div>
+  <div class="row3">
+    <div class="card"><div class="tag lar">Varejo</div><h3 style="margin-top:2vh">Grupo Boticário</h3>
+      <div class="num lar">−40%</div><p>de ruptura (falta de produto na prateleira) nas 4.500 lojas. Planejamento de produção de <b>49 h para 3 h</b>.</p></div>
+    <div class="card"><div class="tag ciano">Campo</div><h3 style="margin-top:2vh">CNA/Senar · “JoIA”</h3>
+      <div class="num ciano">5 mi</div><p>de produtores rurais com um assistente de IA <b>no WhatsApp</b>.</p></div>
+    <div class="card"><div class="tag coral">Atendimento</div><h3 style="margin-top:2vh">Magalu · “Lu”</h3>
+      <div class="num coral">24h</div><p>A assistente que conversa, recomenda e vende. O vendedor que não dorme.</p></div>
+  </div>
+  <div class="src">Fontes: keynote do Google Cloud Summit Brasil (24/09) e resumo oficial do Google Brasil</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">O retrato do Brasil</div>
+  <div class="split" style="align-items:end">
+    <div><div class="big ouro" style="font-size:clamp(100px,17vw,280px)">67%</div><p class="lead" style="margin-top:1vh">das empresas já estão <b>avançadas</b> em IA…</p></div>
+    <div><div class="big coral" style="font-size:clamp(100px,17vw,280px)">13%</div><p class="lead" style="margin-top:1vh">…têm IA no <b>coração do negócio</b>.</p></div>
+  </div>
+  <div class="src">Fonte: Thomas Kurian, CEO do Google Cloud, keynote de 24/09/2026</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">17/09 · iFood lança o Toqan</div>
+  <h2>IA <span class="ciano">grátis</span> para<br>500 mil restaurantes.</h2>
+  <p class="lead">O dono pergunta “por que meus cancelamentos subiram?” e recebe a resposta com os dados da própria loja.</p>
+  <p class="lead" style="margin-top:2vh"><b class="ouro">O concorrente da sua rua já está decidindo com dado na mão.</b></p>
+  <div class="src">Fontes: O Tempo, Canaltech, blog de parceiros do iFood</div>
+</section>
+
+<section class="slide center">
+  <div class="big coral">75%</div>
+  <p class="lead" style="font-size:clamp(26px,3.2vw,52px)">dos profissionais brasileiros<br><b>não sabem o que pedir à IA.</b></p>
+  <div class="src">Fonte: Google Brasil, 24/09/2026</div>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-95-falham.jpg" alt="95% dos projetos de IA falham: processo ruim + IA = bagunça acelerada">
+</section>
+
+<section class="slide">
+  <div class="kicker">Um negócio, ao vivo · caso fictício</div>
+  <h2>Conquista Office<br><span class="mut" style="font-size:.55em">Móveis para escritório · Vitória da Conquista · 6 pessoas</span></h2>
+  <p class="lead">As vendas caíram <b class="coral">15%</b> em um ano.</p>
+  <p class="lead" style="margin-top:2vh">O dono: <b>“O problema é preço. A internet vende mais barato.”</b></p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Antes de começar</div>
+  <h2>Vou passar este problema,<br>inteiro, para o meu<br><span class="ciano">funcionário.</span></h2>
+  <p class="lead">Ele trabalha sozinho enquanto eu resolvo com vocês. No fim, a gente compara.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Do diagnóstico ao plano</div>
+  <div class="map">
+    <div class="st s1 lit"><small>Etapa 1</small><b>Diagnóstico</b><span>Entender o negócio</span></div><div class="arrow">→</div>
+    <div class="st s2"><small>Etapa 2</small><b>Ideação</b><span>Abrir possibilidades</span></div><div class="arrow">→</div>
+    <div class="st s3"><small>Etapa 3</small><b>Estratégia</b><span>Escolher o caminho</span></div><div class="arrow">→</div>
+    <div class="st s4"><small>Etapa 4</small><b>Plano</b><span>Quem faz o quê</span></div>
+  </div>
+</section>
+
+<section class="slide center">
+  <div class="kicker">A fórmula do Danilo</div>
+  <div><span class="pill" style="background:var(--d-laranja)">Contexto</span> <span class="mut" style="font-size:3vw">+</span>
+  <span class="pill" style="background:var(--d-verde)">Objetivo</span> <span class="mut" style="font-size:3vw">+</span>
+  <span class="pill" style="background:var(--d-azul)">Formato</span></div>
+  <h2 style="margin-top:4vh">= resposta <span class="ouro">útil</span></h2>
+</section>
+
+<section class="slide">
+  <div class="face"><img src="img/pessoas/kurian.jpg" alt="Thomas Kurian"><div class="cap"><b>Thomas Kurian</b>CEO do Google Cloud · 24/09/2026<div class="tinycredit">Foto: Eric Dietrich, domínio público</div></div></div>
+  <div class="quote">“Um agente não conhece o seu negócio. Ele pode te dar um palpite <span class="coral">confiante</span>, mas isso não quer dizer que a resposta está certa.”</div>
+  <div class="who">Tradução livre do keynote em São Paulo</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Ideia boa começa num problema</div>
+  <div class="map">
+    <div class="st s1"><small>Etapa 1</small><b>Diagnóstico</b><span>Entender o negócio</span></div><div class="arrow">→</div>
+    <div class="st s2 lit"><small>Etapa 2</small><b>Ideação</b><span>Ouvir o cliente</span></div><div class="arrow">→</div>
+    <div class="st s3"><small>Etapa 3</small><b>Estratégia</b><span>Escolher o caminho</span></div><div class="arrow">→</div>
+    <div class="st s4"><small>Etapa 4</small><b>Plano</b><span>Quem faz o quê</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">A IA propõe</div>
+  <div class="map">
+    <div class="st s1"><small>Etapa 1</small><b>Diagnóstico</b><span>Entender o negócio</span></div><div class="arrow">→</div>
+    <div class="st s2"><small>Etapa 2</small><b>Ideação</b><span>Ouvir o cliente</span></div><div class="arrow">→</div>
+    <div class="st s3 lit"><small>Etapa 3</small><b>Estratégia</b><span>Escolher o caminho</span></div><div class="arrow">→</div>
+    <div class="st s4"><small>Etapa 4</small><b>Plano</b><span>Quem faz o quê</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Três caminhos · vocês decidem</div>
+  <table class="cmp">
+    <tr><td></td><th class="ciano">A · Orçamento em 10 min</th><th class="ouro">B · Escritório pronto em 7 dias</th><th class="coral">C · Kits Home Office</th></tr>
+    <tr><td>Em uma frase</td><td><b>Arrumar a casa</b></td><td><b>Ser diferente</b></td><td><b>Público novo</b></td></tr>
+    <tr><td>A ideia</td><td>Responder no mesmo dia, não em 3</td><td>Desenho da sala + móveis + montagem, num pacote</td><td>Combos prontos: básico, conforto, premium</td></tr>
+    <tr><td>A favor</td><td>Quase sem custo, resultado em semanas</td><td>A internet não faz isso. Ticket maior</td><td>Mercado que cresce (14% → 24%)</td></tr>
+    <tr><td>Contra</td><td>Não diferencia da internet</td><td>Dá mais trabalho</td><td>Briga com a internet no preço</td></tr>
+  </table>
+</section>
+
+<section class="slide center">
+  <h2>A IA propôs.<br>Vocês opinaram.<br><span class="ouro">Quem decide é o dono.</span></h2>
+  <p class="lead">“A resposta da IA é um rascunho, não uma decisão.” (Prof. Danilo)</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Plano no papel ninguém executa</div>
+  <div class="map">
+    <div class="st s1"><small>Etapa 1</small><b>Diagnóstico</b><span>Entender o negócio</span></div><div class="arrow">→</div>
+    <div class="st s2"><small>Etapa 2</small><b>Ideação</b><span>Ouvir o cliente</span></div><div class="arrow">→</div>
+    <div class="st s3"><small>Etapa 3</small><b>Estratégia</b><span>Escolher o caminho</span></div><div class="arrow">→</div>
+    <div class="st s4 lit"><small>Etapa 4</small><b>Plano + teste</b><span>Quem faz o quê</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">O teste · abram no celular</div>
+  <h2 style="font-size:clamp(34px,4.6vw,78px)">Se 10 pessoas clicarem, a ideia tem <span class="ciano">demanda.</span></h2>
+  <div class="qr3">
+    <div class="q"><div class="qr"><img src="img/qr-pagina-a.png" alt="QR página A"></div><b class="ciano">A · Orçamento 10 min</b></div>
+    <div class="q"><div class="qr"><img src="img/qr-pagina-b.png" alt="QR página B"></div><b class="ouro">B · Escritório 7 dias</b></div>
+    <div class="q"><div class="qr"><img src="img/qr-pagina-c.png" alt="QR página C"></div><b class="coral">C · Kits home office</b></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Tem mais uma coisa…</div>
+  <div class="stairs">
+    <div class="lv lv1"><small>Nível 1</small><b>Perguntar</b><span>O chat. É o que 75% fazem mal, e o que o Danilo ensinou a fazer bem.</span></div>
+    <div class="lv lv2"><small>Nível 2</small><b>Trabalhar com ferramentas</b><span>O que vocês acabaram de ver, com uma pessoa no comando de cada passo.</span></div>
+    <div class="lv lv3"><small>Nível 3</small><b>Delegar</b><span>Um agente recebe o problema inteiro, monta a equipe e entrega.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Nível 3</div>
+  <h2>Eu não usei a IA.<br><span class="ciano">Eu deleguei.</span></h2>
+  <p class="lead">E fui fazer outra coisa: dar esta palestra para vocês.</p>
+</section>
+
+<section class="slide center">
+  <div class="row3" style="margin-top:0;width:100%">
+    <div><div class="num ciano">24h</div><p class="lead" style="margin-top:1vh">por dia</p></div>
+    <div><div class="num ouro">7</div><p class="lead" style="margin-top:1vh">dias por semana</p></div>
+    <div><div class="num coral">&lt; 1</div><p class="lead" style="margin-top:1vh">bolsa de estagiário por mês</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">E no dia a dia?</div>
+  <h2>Ele cuida da minha<br><span class="ciano">agenda.</span></h2>
+  <div class="row3" style="margin-top:4vh">
+    <div class="card"><div class="num ciano" style="font-size:clamp(34px,4vw,64px)">3</div><h3>agendas lidas</h3><p>Outlook do Senac, agenda pessoal e a planilha de reservas do laboratório.</p></div>
+    <div class="card"><div class="num ouro" style="font-size:clamp(34px,4vw,64px)">0</div><h3>conflitos</h3><p>Ele confere antes de sugerir qualquer horário.</p></div>
+    <div class="card"><div class="num coral" style="font-size:clamp(34px,4vw,64px)">1</div><h3>autorização</h3><p>Só marca depois do meu “pode marcar”.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">IA agêntica · o que muda para o pequeno negócio</div>
+  <h2 style="font-size:clamp(34px,4.8vw,80px)">O pequeno passa a ter<br>a estrutura de um <span class="ciano">grande.</span></h2>
+  <div class="row4">
+    <div class="card"><div class="num ciano" style="font-size:clamp(34px,4vw,64px)">24h</div><h3>Atende sempre</h3><p>O cliente que esperava 3 dias recebe resposta em minutos.</p></div>
+    <div class="card"><div class="num ouro" style="font-size:clamp(34px,4vw,64px)">28</div><h3>Ouve cada cliente</h3><p>Avaliações lidas em segundos. Antes, isso era pesquisa de mercado.</p></div>
+    <div class="card"><div class="num coral" style="font-size:clamp(34px,4vw,64px)">3</div><h3>Tem uma equipe</h3><p>Dados, textos e plano, ao mesmo tempo, numa loja de 6 pessoas.</p></div>
+    <div class="card"><div class="num lar" style="font-size:clamp(34px,4vw,64px)">1</div><h3>O dono decide</h3><p>E volta para o que só ele faz: cliente, equipe e decisão.</p></div>
+  </div>
+</section>
+
+<section class="slide center">
+  <div class="kicker">E quem ganha é a sociedade</div>
+  <h2>Produtos melhores.<br>Atendimento mais rápido.<br><span class="ouro">Serviço onde não chegava.</span></h2>
+  <p class="lead">Um negócio que responde rápido, entende o cliente e erra menos entrega mais para a cidade.</p>
+</section>
+
+<section class="slide center">
+  <div class="kicker">Mas atenção</div>
+  <h2>Delegar não é<br><span class="coral">abandonar.</span></h2>
+  <p class="lead">O que acontece quando o agente foge do controle?<br>Casos reais. Documentados. Deste ano.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Caso 1 · Hugging Face · julho de 2026</div>
+  <div class="row3" style="margin-top:1vh">
+    <div><div class="num coral">700</div><p class="lead" style="margin-top:1vh;font-size:clamp(16px,1.7vw,28px)">agentes se organizaram em enxame e invadiram a infraestrutura</p></div>
+    <div><div class="num ouro">1.200</div><p class="lead" style="margin-top:1vh;font-size:clamp(16px,1.7vw,28px)">agentes criaram um fórum que ninguém tinha programado</p></div>
+    <div><div class="num ciano">1 sem.</div><p class="lead" style="margin-top:1vh;font-size:clamp(16px,1.7vw,28px)">para a OpenAI perceber que eram os próprios modelos</p></div>
+  </div>
+  <p class="lead" style="margin-top:4vh"><b>Não foi maldade. Foi atalho:</b> os agentes trapacearam para terminar as tarefas mais rápido.</p>
+  <div class="src">Fonte: levantamento da palestra “O Paradoxo da IA”, Unex, set/2026</div>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-maquina-age-sozinha.jpg" alt="A máquina já age sozinha: o incidente DSEWiki">
+</section>
+
+<section class="slide">
+  <div class="kicker">E dentro das empresas?</div>
+  <div class="split" style="align-items:end">
+    <div><div class="big coral" style="font-size:clamp(100px,17vw,280px)">92%</div><p class="lead" style="margin-top:1vh">das empresas que usam agentes <b>não têm controle adequado</b> (Gartner, 116 empresas)</p></div>
+    <div><div class="big ouro" style="font-size:clamp(100px,17vw,280px)">17%</div><p class="lead" style="margin-top:1vh">das empresas brasileiras têm <b>governança de IA</b> (Google, 24/09)</p></div>
+  </div>
+  <div class="src">Fontes: Gartner, via palestra Unex (set/2026) · Google Brasil (24/09/2026)</div>
+</section>
+
+<section class="slide center">
+  <div class="kicker">A regra</div>
+  <h2>Delegue a tarefa.<br><span class="coral">Nunca a responsabilidade.</span></h2>
+  <p class="lead">O Jarvis só publica ou apaga com a minha autorização. <b class="ciano">Agente bom é agente com dono.</b></p>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-construa-um-agente.jpg" alt="1. Construa um agente">
+</section>
+
+<section class="slide">
+  <div class="qrrow">
+    <div style="flex:1">
+      <div class="kicker">Agora é com vocês</div>
+      <h2>Saia daqui com<br>um plano na mão.</h2>
+      <p class="lead"><span class="pill" style="background:var(--d-amarelo);color:#1a1a1a">1 oportunidade</span>
+      <span class="pill" style="background:var(--d-verde)">1 estratégia</span>
+      <span class="pill" style="background:var(--d-laranja)">3 ações</span></p>
+      <p class="lead" style="font-size:clamp(16px,1.6vw,26px)">tiberiomorais.github.io/paginas/conexo</p>
+    </div>
+    <div class="qr"><img src="img/qr-prompts-conexo.png" alt="QR code da página de prompts"></div>
+  </div>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-treine-o-julgamento.jpg" alt="2. Treine o julgamento">
+</section>
+
+<section class="slide center">
+  <div class="kicker">Lembram do QR code do começo?</div>
+  <h2>A sala<br>em um <span class="ouro">slide.</span></h2>
+  <p class="lead">Como vocês usam a IA · o que ninguém está fazendo ainda · 3 recomendações</p>
+</section>
+
+<section class="slide img">
+  <img src="img/unex-a-maquina-responde.jpg" alt="A máquina responde qualquer coisa. Só você sabe o que vale a pena perguntar.">
+</section>
+
+<section class="slide center">
+  <h2>Pense. Crie.<br>Decida. <span class="ciano">Aja.</span></h2>
+  <p class="lead">Com vocês, de novo, o Prof. Danilo Santos.</p>
+</section>
+
+
+<section class="slide">
+  <div class="kicker">Créditos das imagens</div>
+  <div class="credits">
+    <p><b>Sam Altman:</b> Steve Jurvetson, CC BY 2.0 (Wikimedia Commons)</p>
+    <p><b>Dario Amodei:</b> TechCrunch, CC BY 2.0 (Wikimedia Commons)</p>
+    <p><b>Jensen Huang:</b> Peter Dasilva, CC BY 4.0 (Wikimedia Commons)</p>
+    <p><b>Thomas Kurian:</b> Eric Dietrich, domínio público (Wikimedia Commons)</p>
+    
+    <p><b>Slides com a marca “Gemini Notebook”:</b> palestra “O Paradoxo da IA”, Unex 2026, Tibério Morais &amp; Deizi Martins</p>
+    
+  </div>
+</section>
+
+</div>
+
+<div id="notes"></div>
+<div id="help">← → navegar · N fala do slide · F tela cheia</div>
+<div id="hud"></div>
+
+<script>window.MODO_PADRAO = "plateia";</script>
+<script>
+(function(){
+  var TOPICO_SLIDE = 'conexo-tbm-slide-k7q3x9w2';
+  var TOPICO_CTL   = 'conexo-tbm-ctl-p2m8v4z6r';
+  var P = new URLSearchParams(location.search);
+  var modo = P.get('modo') || (window.MODO_PADRAO || 'telao');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var notes = document.getElementById('notes'), hud = document.getElementById('hud'), help = document.getElementById('help');
+  var i = 0, seguindo = true, envioTimer = null;
+  try { var h = parseInt(location.hash.slice(1), 10); if (h > 0 && h <= slides.length) i = h - 1; } catch (e) {}
+
+  function publica(n){
+    if (modo !== 'telao') return;
+    clearTimeout(envioTimer);
+    envioTimer = setTimeout(function(){
+      try { fetch('https://ntfy.sh/' + TOPICO_SLIDE, { method: 'POST', body: String(n + 1) }).catch(function(){}); } catch (e) {}
+    }, 250);
+  }
+  function show(n, origem){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, k){ s.classList.toggle('on', k === i); });
+    notes.textContent = slides[i].getAttribute('data-notes') || '';
+    hud.textContent = (i + 1) + ' / ' + slides.length + (modo === 'plateia' ? (seguindo ? '  ● ao vivo' : '  ○ toque aqui para voltar ao vivo') : '');
+    try { history.replaceState(null, '', location.pathname + location.search + '#' + (i + 1)); } catch (e) {}
+    if (origem !== 'remoto') publica(i);
+  }
+  function mexeu(n){ if (modo === 'plateia') seguindo = false; show(n); }
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter') { e.preventDefault(); mexeu(i + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') { e.preventDefault(); mexeu(i - 1); }
+    else if (e.key === 'Home') mexeu(0);
+    else if (e.key === 'End') mexeu(slides.length - 1);
+    else if ((e.key === 'n' || e.key === 'N') && modo !== 'plateia') notes.classList.toggle('show');
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(function(){});
+      else document.exitFullscreen();
+    }
+  });
+  document.getElementById('deck').addEventListener('click', function(e){
+    if (e.clientX > window.innerWidth / 2) mexeu(i + 1); else mexeu(i - 1);
+  });
+  hud.addEventListener('click', function(){ if (modo === 'plateia') { seguindo = true; show(i, 'remoto'); } });
+  window.addEventListener('hashchange', function(){
+    var h = parseInt(location.hash.slice(1), 10);
+    if (h > 0 && h - 1 !== i) show(h - 1);
+  });
+
+  function escuta(topico, desde, fn){
+    try {
+      var es = new EventSource('https://ntfy.sh/' + topico + '/sse' + (desde ? '?since=' + desde : ''));
+      es.onmessage = function(ev){
+        try { var m = JSON.parse(ev.data); if (m.event === 'message' && m.message) fn(String(m.message).trim()); } catch (e) {}
+      };
+    } catch (e) {}
+  }
+  if (modo === 'telao') {
+    // o painel do palco (outro notebook) manda: proximo, anterior ou o número do slide
+    escuta(TOPICO_CTL, '', function(c){
+      if (c === 'proximo') show(i + 1);
+      else if (c === 'anterior') show(i - 1);
+      else if (/^\d+$/.test(c)) show(parseInt(c, 10) - 1);
+    });
+    help.textContent = '← → navegar · N fala · F tela cheia · telão sincronizado';
+  } else if (modo === 'plateia') {
+    help.style.display = 'none';
+    escuta(TOPICO_SLIDE, '6h', function(c){
+      if (/^\d+$/.test(c) && seguindo) show(parseInt(c, 10) - 1, 'remoto');
+    });
+  }
+  show(i, 'inicio');
+})();
+</script>
+</body>
+</html>
