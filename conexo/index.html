@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Conselho de administração de bolso</title>
-<meta name="description" content="Os 4 prompts do hands-on da palestra Decisões Estratégicas com IA — Co.Nexo Senac, Vitória da Conquista.">
+<title>Da pergunta à ação · seu plano 1 + 1 + 3</title>
+<meta name="description" content="Os 4 pedidos do desafio prático da palestra Decisões Estratégicas com IA, Co.Nexo Senac, Vitória da Conquista.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Rubik:wght@500;600;700&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@
 
   header { padding: 32px 0 8px; }
   .eyebrow {
-    font-size: 13px; font-weight: 600; letter-spacing: 1.6px;
+    font-size: 14px; font-weight: 600; letter-spacing: 1.6px;
     text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
   }
   h1 {
@@ -74,6 +74,12 @@
     border-radius: 14px; padding: 18px; margin: 24px 0 8px;
   }
   .setup label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 16px; }
+  .setup textarea { width: 100%; font: inherit; font-size: 16px; padding: 12px 14px; min-height: 150px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); resize: vertical; }
+  .setup textarea:focus { outline: 2px solid var(--accent-strong); outline-offset: 1px; }
+  .setup label + input + .hint + label { margin-top: 18px; }
+  .goal { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .goal span { font-family:'Rubik',sans-serif; font-weight:700; font-size:15px; padding:6px 12px; border-radius:999px; background:var(--ink); color:var(--paper); }
   .setup input {
     width: 100%; font: inherit; font-size: 17px; padding: 13px 14px;
     border: 1px solid var(--line); border-radius: 10px;
@@ -118,7 +124,7 @@
   .star { border-color: var(--accent-strong); border-width: 2px; }
   .star .num { color: var(--accent-strong); }
   .tag {
-    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .6px;
+    display: inline-block; font-size: 14px; font-weight: 600; letter-spacing: .6px;
     text-transform: uppercase; color: var(--paper); background: var(--accent-strong);
     padding: 4px 9px; border-radius: 999px; margin-bottom: 10px;
   }
@@ -138,46 +144,50 @@
 
 <header>
   <p class="eyebrow">Co.Nexo Senac &middot; Vitória da Conquista</p>
-  <h1>Conselho de administração de bolso</h1>
-  <p class="sub">Quatro perguntas, na ordem, sobre o seu negócio de verdade. Leva uns 8 minutos.</p>
+  <h1>Da pergunta à ação</h1>
+  <p class="sub">Os mesmos 4 passos da demonstração, agora no seu negócio: diagnóstico, ideação, estratégia e plano.</p>
+  <div class="goal"><span>1 oportunidade</span><span>1 estratégia</span><span>3 ações</span></div>
 </header>
 
 <div class="setup">
   <label for="seg">Qual é o seu segmento?</label>
   <input id="seg" type="text" placeholder="ex.: açaí, salão de beleza, contabilidade" autocomplete="off" autocapitalize="none" enterkeyhint="done">
-  <p class="hint">Escreva uma vez e os quatro prompts abaixo já saem preenchidos.</p>
+  <p class="hint">Escreva uma vez e os quatro pedidos abaixo já saem preenchidos.</p>
+  <label for="cinco" style="margin-top:18px">Suas 5 respostas da dinâmica do Danilo</label>
+  <textarea id="cinco" placeholder="1. O que você vende?&#10;2. Para quem você vende?&#10;3. Qual problema você resolve?&#10;4. Qual é hoje o principal desafio?&#10;5. O que quer melhorar nos próximos 90 dias?"></textarea>
+  <p class="hint">Quanto mais contexto, melhor a resposta. É a fórmula do Danilo: contexto + objetivo + formato.</p>
 </div>
 
 <div class="where">
   <h2>Onde colar</h2>
-  <p>Use a <b>Meta AI no WhatsApp</b> — não precisa instalar nada. Se você já usa ChatGPT ou Gemini, pode seguir por lá. Cole as perguntas <b>na mesma conversa</b>, uma depois da outra: cada uma usa a resposta da anterior.</p>
+  <p>Use a <b>Meta AI no WhatsApp</b> (o círculo colorido na tela de conversas): não precisa instalar nada. Se você já usa ChatGPT ou Gemini, pode seguir por lá. Cole as perguntas <b>na mesma conversa</b>, uma depois da outra: cada uma usa a resposta da anterior.</p>
 </div>
 
 <div class="card">
-  <div class="card-head"><span class="num">1</span><h3>O retrato</h3></div>
-  <p class="why">Para a IA entender o seu negócio antes de opinar.</p>
+  <div class="card-head"><span class="num">1</span><h3>Diagnóstico</h3></div>
+  <p class="why">Entender o negócio antes de sair dando palpite.</p>
   <p class="prompt" id="p1"></p>
   <button class="copy" data-target="p1">Copiar pergunta 1</button>
 </div>
 
-<div class="card star">
-  <span class="tag">O que quase ninguém faz</span>
-  <div class="card-head"><span class="num">2</span><h3>O sócio pessimista</h3></div>
-  <p class="why">A IA tende a concordar com você. Esta pergunta obriga ela a discordar.</p>
+<div class="card">
+  <div class="card-head"><span class="num">2</span><h3>Ideação</h3></div>
+  <p class="why">Ideia boa começa num problema do cliente.</p>
   <p class="prompt" id="p2"></p>
   <button class="copy" data-target="p2">Copiar pergunta 2</button>
 </div>
 
-<div class="card">
-  <div class="card-head"><span class="num">3</span><h3>Os cenários</h3></div>
-  <p class="why">Decidir é escolher entre futuros. Aqui eles ficam escritos.</p>
+<div class="card star">
+  <span class="tag">Com o sócio pessimista</span>
+  <div class="card-head"><span class="num">3</span><h3>Estratégia</h3></div>
+  <p class="why">A IA propõe e compara. Quem escolhe é você.</p>
   <p class="prompt" id="p3"></p>
   <button class="copy" data-target="p3">Copiar pergunta 3</button>
 </div>
 
 <div class="card">
-  <div class="card-head"><span class="num">4</span><h3>O plano</h3></div>
-  <p class="why">Sem prazo e sem medida, não é plano — é intenção.</p>
+  <div class="card-head"><span class="num">4</span><h3>Plano: 1 + 1 + 3</h3></div>
+  <p class="why">Sem prazo e sem medida, não é plano: é intenção.</p>
   <p class="prompt" id="p4"></p>
   <button class="copy" data-target="p4">Copiar pergunta 4</button>
 </div>
@@ -202,13 +212,18 @@
 (function () {
   var FALLBACK = '[seu segmento]';
   var templates = {
-    p1: 'Tenho um negócio de {S} em Vitória da Conquista, na Bahia. Faça uma análise SWOT do meu negócio em tópicos curtos e diretos.',
-    p2: 'Agora seja meu sócio pessimista: quais são os 3 maiores riscos que eu não estou vendo no meu negócio de {S}? Seja direto, não seja gentil comigo.',
-    p3: 'Monte 3 cenários para os próximos 6 meses do meu negócio de {S}: otimista, realista e pessimista. Dê uma ação concreta para cada um.',
-    p4: 'Transforme tudo isso em um plano de 30 dias para o meu negócio de {S}, com 5 ações e como eu meço o resultado de cada uma.'
+    p1: 'CONTEXTO: tenho um negócio de {S} em Vitória da Conquista, na Bahia.{C}\nOBJETIVO: quero um diagnóstico: as 3 causas mais prováveis do meu principal desafio, em ordem de importância.\nFORMATO: uma tabela curta (causa | por que acho isso | como confirmar em 1 semana). Marque o que for suposição sua. No fim, faça a 1 pergunta mais importante que eu deveria responder antes de decidir.',
+    p2: 'Pensando nos clientes do meu negócio de {S}: quais dores e necessidades eles provavelmente têm que eu ainda não resolvo? Com base nisso, proponha 5 oportunidades (produto, serviço, oferta ou jeito de vender). Para cada uma: qual dor resolve, para qual cliente, e como testar gastando menos de R$ 500.',
+    p3: 'Escolha as 3 melhores oportunidades e compare numa tabela: impacto, custo, esforço, em quanto tempo aparece resultado e risco. Depois seja meu sócio pessimista: o que pode dar errado em cada uma e como eu perceberia cedo? No fim, diga qual você escolheria, mas lembre que a decisão é minha.',
+    p4: 'Escolhi a oportunidade: [escreva aqui a que você escolheu]. Monte meu plano em 1 + 1 + 3: 1 oportunidade (em uma frase), 1 estratégia (em uma frase) e 3 ações práticas para os próximos 30, 60 e 90 dias. Para cada ação: quem faz, quanto custa e o número que vou medir toda semana. Formato curto, para eu copiar e guardar.'
   };
 
   var input = document.getElementById('seg');
+  var cinco = document.getElementById('cinco');
+  function ctx() {
+    var v = (cinco.value || '').trim();
+    return v === '' ? '' : ' Minhas respostas sobre o negócio:\n' + v;
+  }
   var ids = ['p1', 'p2', 'p3', 'p4'];
 
   function segment() {
@@ -217,7 +232,7 @@
   }
 
   function textFor(id) {
-    return templates[id].replace('{S}', segment());
+    return templates[id].replace('{S}', segment()).replace('{C}', ctx());
   }
 
   function render() {
@@ -225,13 +240,13 @@
     var isPlaceholder = s === FALLBACK;
     ids.forEach(function (id) {
       var el = document.getElementById(id);
-      var parts = templates[id].split('{S}');
+      var parts = templates[id].replace('{C}', ctx()).split('{S}');
       el.textContent = '';
       el.appendChild(document.createTextNode(parts[0]));
       var mark = document.createElement(isPlaceholder ? 'b' : 'span');
       mark.textContent = s;
       el.appendChild(mark);
-      el.appendChild(document.createTextNode(parts[1]));
+      el.appendChild(document.createTextNode(parts[1] || ''));
     });
   }
 
@@ -243,6 +258,11 @@
   input.addEventListener('input', function () {
     render();
     try { localStorage.setItem('segmento', input.value); } catch (e) {}
+  });
+  try { var c = localStorage.getItem('cinco'); if (c) { cinco.value = c; } } catch (e) {}
+  cinco.addEventListener('input', function () {
+    render();
+    try { localStorage.setItem('cinco', cinco.value); } catch (e) {}
   });
 
   document.querySelectorAll('button.copy').forEach(function (btn) {
