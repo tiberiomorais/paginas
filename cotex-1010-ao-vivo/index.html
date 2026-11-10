@@ -794,11 +794,17 @@ function buildPanel(){
   #painel .pe-nx b{color:#e9f3f7}
   #painel .pe-bot button{font:700 20px system-ui;padding:14px 26px;border-radius:10px;border:1px solid #2ee6ff;background:#0c1a23;color:#e9f3f7;cursor:pointer}
   #painel .pe-bot button.av{background:#2ee6ff;color:#001018}
-  #painel .pe-ajuda{font-size:14px;color:#5f8290}`;
+  #painel .pe-ajuda{font-size:14px;color:#5f8290}
+  #painel .pe-prox{margin:12px 26px 0;padding:14px 18px;border-radius:10px;font:800 26px/1.25 system-ui;letter-spacing:.02em}
+  #painel .pe-prox small{display:block;font:600 17px/1.3 system-ui;letter-spacing:0;margin-top:4px;opacity:.9}
+  #painel .pe-prox.anima{background:#06303a;border:2px solid #2ee6ff;color:#2ee6ff}
+  #painel .pe-prox.passa{background:#3a2606;border:2px solid #ffb020;color:#ffb020}
+  #painel .pe-ck{display:block;font:800 17px/1.2 system-ui;letter-spacing:.06em;color:#001018;background:#2ee6ff;border-radius:6px;padding:7px 12px;margin:0 0 10px;width:max-content;max-width:100%}
+  #painel .pe-fim{margin:6px 16px 0;padding:12px 16px;border-radius:8px;border:2px dashed #ffb020;color:#ffb020;font:800 20px/1.3 system-ui;letter-spacing:.04em}`;
   document.head.appendChild(css);
   el.innerHTML='<div class="pe-top"><span class="pe-id" id="pid"></span><span class="pe-tt" id="ptt"></span><span class="pe-dots" id="pst"></span>'+
     '<div class="pe-clock" id="pclk" title="T liga/pausa · R zera"><b id="pk">0:00</b><span id="pdl">T para ligar o relógio</span></div></div>'+
-    '<div class="pe-nota" id="pnota"></div><div class="pe-fala" id="pfala"></div>'+
+    '<div class="pe-prox" id="pprox"></div><div class="pe-nota" id="pnota"></div><div class="pe-fala" id="pfala"></div>'+
     '<div class="pe-bot"><div class="pe-nx" id="pnx"></div><span class="pe-ajuda">← → avançam · T relógio · + − letra</span><button id="p1">◀ VOLTAR</button><button id="p2" class="av">AVANÇAR ▶</button></div>';
   const $=i=>document.getElementById(i);
   const toS=t=>{if(!t)return null;const m=t.replace('+','').split(':');return +m[0]*60+ +m[1]};
@@ -830,13 +836,24 @@ function buildPanel(){
         if(cur.txt.join('').trim())secs.push(cur);
         const c=h[1].match(/clique\s*(\d+)/i);
         let titulo=h[2].replace(/\(\d+:\d+\s*a\s*\d+:\d+\)/,'').trim();
-        cur={step:c?+c[1]:(secs.length?(secs[secs.length-1].step):0),label:(c?'clique '+c[1]:(/ainda/i.test(h[1])?'continuação':''))+(titulo?(c||/ainda/i.test(h[1])?' · ':'')+titulo:''),txt:[]};
+        // roteiro antigo: "clique 2" = o 1º toque no slide (o "clique 1" era a entrada do slide)
+        cur=c?{step:+c[1]-1,label:'',ck:titulo,txt:[]}:{step:(secs.length?(secs[secs.length-1].step):0),label:(/ainda/i.test(h[1])?'continuação':'')+(titulo?(/ainda/i.test(h[1])?' · ':'')+titulo:''),txt:[]};
         return;
       }
       cur.txt.push(l);
     });
     if(cur.txt.join('').trim()||!secs.length)secs.push(cur);
-    return {nota,secs};
+    const RX=/\[(?:clique|click)(?:\s*\d+)?(?::\s*([^\]]*))?\]/i,out=[];
+    secs.forEach(sc=>{
+      const pedacos=sc.txt.join('\n').split(/(\[(?:clique|click)(?:\s*\d+)?(?::[^\]]*)?\])/i);
+      let st=sc.step,ck=(sc.ck===undefined?null:sc.ck),buf=pedacos[0],lab=sc.label,primeiro=true;
+      for(let k=1;k<pedacos.length;k+=2){
+        if(buf.trim()||primeiro)out.push({step:st,label:lab,ck:ck,txt:[buf]});
+        primeiro=false;st++;lab='';const m=pedacos[k].match(RX);ck=(m&&m[1])?m[1].trim():'';buf=pedacos[k+1]||'';
+      }
+      out.push({step:st,label:lab,ck:ck,txt:[buf]});
+    });
+    return {nota,secs:out.filter(x=>x.txt.join('').trim()||x.ck!==null)};
   }
   function marca(t){
     return esc(t.trim())
@@ -857,7 +874,9 @@ function buildPanel(){
     const p=partes(sl.dataset.notes||'');
     $('pnota').style.display=p.nota?'':'none';$('pnota').textContent=p.nota?'Bastidor: '+p.nota:'';
     if(ultimo!==pc){
-      $('pfala').innerHTML=p.secs.map((s,k)=>'<div class="pe-sec" data-step="'+s.step+'">'+(s.label?'<div class="pe-h">'+esc(s.label)+'</div>':'')+'<div class="pe-t">'+marca(junta(s.txt.join('\n')))+'</div></div>').join('')||'<div class="pe-sec on"><div class="pe-t">(sem fala neste slide)</div></div>';
+      let nx0=pc+1;while(nx0<slides.length&&sk.has(slides[nx0].id))nx0++;
+      $('pfala').innerHTML=(p.secs.map((s,k)=>'<div class="pe-sec" data-step="'+s.step+'">'+(s.label?'<div class="pe-h">'+esc(s.label)+'</div>':'')+(s.ck!==null&&s.ck!==undefined?'<span class="pe-ck">▶ CLIQUE '+s.step+(s.ck?' · aparece: '+esc(s.ck):'')+'</span>':'')+'<div class="pe-t">'+marca(junta(s.txt.join('\n')))+'</div></div>').join('')||'<div class="pe-sec on"><div class="pe-t">(sem fala neste slide)</div></div>')+
+        (nx0<slides.length?'<div class="pe-fim">➜ AQUI VOCÊ PASSA O SLIDE · '+slides[nx0].id+' · '+esc(slides[nx0].dataset.title||'')+'</div>':'');
       $('pfala').scrollTop=0;ultimo=pc;ultimoPs=-1;
     }
     // acende o trecho do clique atual (o último trecho com passo ≤ clique atual)
@@ -866,6 +885,9 @@ function buildPanel(){
     let prim=null;ss.forEach(s=>{const on=+s.dataset.step===mx;s.classList.toggle('on',on);if(on&&!prim)prim=s});
     if(prim&&ultimoPs!==ps){prim.scrollIntoView({block:'start'});ultimoPs=ps}
     let nx=pc+1;while(nx<slides.length&&sk.has(slides[nx].id))nx++;
+    const pp=$('pprox');
+    if(n&&ps<n){const prox=p.secs.find(x=>x.step===ps+1);pp.className='pe-prox anima';pp.innerHTML='PRÓXIMO TOQUE ▸ ANIMA NESTE SLIDE · clique '+(ps+1)+' de '+n+((prox&&prox.ck)?'<small>aparece: '+esc(prox.ck)+'</small>':'<small>o slide continua o mesmo</small>')}
+    else{pp.className='pe-prox passa';pp.innerHTML=nx<slides.length?'PRÓXIMO TOQUE ▸ NOVO SLIDE<small>'+slides[nx].id+' · '+esc(slides[nx].dataset.title||'')+'</small>':'ÚLTIMO SLIDE'}
     $('pnx').innerHTML=(n&&ps<n)?'Próximo: <b>mais um clique neste slide</b>':(nx<slides.length?'Próximo: <b>'+slides[nx].id+' · '+esc(slides[nx].dataset.title||'')+'</b>':'Último slide');
     if(!run&&acc===0&&sl.id==='S01')toggle();                                    // o relógio liga sozinho no S01
     tick();
